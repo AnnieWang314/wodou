@@ -1,22 +1,66 @@
 import type { NextRequest, NextResponse } from "next/server";
+import { createHash } from "crypto";
+import { kv } from "@vercel/kv";
 
 export async function POST(req: NextRequest) {
-  const { encodedWord, userInput } = await req.json();
+  const { userEmail, encodedWord, userInput } = await req.json();
+  const hashEmail = createHash("sha256").update(userEmail).digest("hex");
 
-  // Decode the encodedWord (this is a placeholder, replace with actual decoding logic)
-  const decodedWord = decodeWord(encodedWord);
+  const currentEncodedWord = await kv.hget(hashEmail, "currentEncodedWord");
+  const decodedWord: string | null = await kv.hget(hashEmail, "currentWord");
 
-  if (userInput === decodedWord) {
-    return new Response(JSON.stringify({ message: "Correct!" }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
-  } else {
-    return new Response(JSON.stringify({ message: "Incorrect, try again." }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+  if (
+    !decodedWord ||
+    decodedWord.length === 0 ||
+    encodedWord !== currentEncodedWord
+  ) {
+    return new Response(
+      JSON.stringify({ message: "This is not the current word." }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
+
+  await kv.hset(hashEmail, { currentWord: "" });
+  await kv.hset(hashEmail, { currentEncodedWord: "" });
+
+  let feedback = Array(6).fill("absent");
+
+  for (let i = 0; i < 6; i++) {
+    if (userInput[i] === decodedWord[i]) {
+      feedback[i] = "correct";
+    }
+  }
+
+  for (let i = 0; i < 6; i++) {
+    if (feedback[i] === "absent") {
+      const countInDecodedWord = decodedWord.split(userInput[i]).length - 1;
+      const countCorrectFeedback = feedback.filter(
+        (f, index) => f === "correct" && userInput[index] === userInput[i]
+      ).length;
+      const countPresentFeedback = feedback.filter(
+        (f, index) => f === "present" && userInput[index] === userInput[i]
+      ).length;
+
+      if (countInDecodedWord > countCorrectFeedback + countPresentFeedback) {
+        feedback[i] = "present";
+      }
+    }
+  }
+
+  let secretMessage = null;
+  if (feedback.every((f) => f === "correct")) {
+    secretMessage = createHash("sha256")
+      .update(userEmail + "bugus314")
+      .digest("hex");
+  }
+
+  return new Response(JSON.stringify({ feedback, secretMessage }), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
 }
 
 export async function handler(req: NextRequest) {
@@ -24,9 +68,4 @@ export async function handler(req: NextRequest) {
     status: 405,
     headers: { "Content-Type": "application/json" },
   });
-}
-
-function decodeWord(encodedWord: string): string {
-  // Replace this with your actual decoding logic
-  return encodedWord.split("").reverse().join("");
 }

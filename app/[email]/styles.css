@@ -8,6 +8,8 @@
   height: calc(100% - var(--header-height));
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .AppHeader-module_appHeader__Jn4R7 {
@@ -68,6 +70,7 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
+  height: 100%;
 }
 .Tile-module_tile__UWEHN::before {
   content: "";
@@ -112,30 +115,34 @@
     opacity: 1;
   }
 }
+
 .Tile-module_tile__UWEHN[data-animation="flip-in"] {
   animation-name: Tile-module_FlipIn__PCdh1;
-  animation-duration: 250ms;
-  animation-timing-function: ease-in;
+  animation-duration: 600ms; /* Updated duration */
+  animation-timing-function: ease-in-out; /* Updated timing function */
+  animation-fill-mode: forwards; /* Ensure the animation stays in the final state */
 }
 @keyframes Tile-module_FlipIn__PCdh1 {
   0% {
-    transform: rotateX(0);
+    transform: rotateX(90deg);
   }
   100% {
-    transform: rotateX(-90deg);
+    transform: rotateX(0);
   }
 }
+
 .Tile-module_tile__UWEHN[data-animation="flip-out"] {
   animation-name: Tile-module_FlipOut__xeJcb;
-  animation-duration: 250ms;
-  animation-timing-function: ease-in;
+  animation-duration: 600ms;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
 }
 @keyframes Tile-module_FlipOut__xeJcb {
   0% {
-    transform: rotateX(-90deg);
+    transform: rotateX(0);
   }
   100% {
-    transform: rotateX(0);
+    transform: rotateX(90deg);
   }
 }
 .Row-module_row__pwpBq {
@@ -205,10 +212,12 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 60px;
+  padding: 30px;
   align-items: center;
   flex-grow: 1;
   overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 .Board-module_board__jeoPS {
   display: grid;
