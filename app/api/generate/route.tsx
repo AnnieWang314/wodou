@@ -31,12 +31,12 @@ export async function GET(req: NextRequest) {
   });
 }
 
-export async function handler(req: NextRequest) {
-  return new Response(JSON.stringify({ message: "Method Not Allowed" }), {
-    status: 405,
-    headers: { "Content-Type": "application/json" },
-  });
-}
+// export async function handler(req: NextRequest) {
+//   return new Response(JSON.stringify({ message: "Method Not Allowed" }), {
+//     status: 405,
+//     headers: { "Content-Type": "application/json" },
+//   });
+// }
 
 const chineseStrokes: { [key: string]: string[] } = {
   0: [

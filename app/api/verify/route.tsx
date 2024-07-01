@@ -63,9 +63,9 @@ export async function POST(req: NextRequest) {
   });
 }
 
-export async function handler(req: NextRequest) {
-  return new Response(JSON.stringify({ message: "Method Not Allowed" }), {
-    status: 405,
-    headers: { "Content-Type": "application/json" },
-  });
-}
+// export async function handler(req: NextRequest) {
+//   return new Response(JSON.stringify({ message: "Method Not Allowed" }), {
+//     status: 405,
+//     headers: { "Content-Type": "application/json" },
+//   });
+// }
