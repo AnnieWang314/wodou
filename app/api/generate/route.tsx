@@ -845,7 +845,7 @@ const baconianDict: { [key: string]: string } = {
 };
 const hi = baconianDict.x;
 
-export const encodeMessage = (message: string): string => {
+const encodeMessage = (message: string): string => {
   const binaryMessage = message
     .toLowerCase()
     .split("")
