@@ -26,7 +26,7 @@ export default function Home() {
     "https://www.baidu.com",
     "https://www.youtube.com",
     "https://en.wikipedia.org/wiki/Caesar_cipher",
-    "https://en.wikipedia.org/wiki/Bacon%27s_cipher",
+    "https://en.wikipedia.org/wiki/Francis_Bacon",
     "https://hackmit.org/",
     "https://en.wikipedia.org/wiki/RSA_(cryptosystem)",
     "https://en.wikipedia.org/wiki/Morse_code",
