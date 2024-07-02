@@ -80,7 +80,7 @@
 }
 .Tile-module_tile__UWEHN:hover {
   background-color: var(
-    --color-present
+    --wordleBlack
   ) !important; /* Change background to yellow */
   color: var(
     --key-evaluated-text-color
