@@ -14,6 +14,38 @@ export default function Home() {
   const [feedback, setFeedback] = useState<string[]>(Array(6).fill("tbd"));
   const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
   const [secretMessage, setSecretMessage] = useState<string | null>(null);
+  const links = [
+    "https://hackmit.org/",
+    "https://hackmit.org/",
+    "https://hackmit.org/",
+    "https://www.google.com",
+    "https://hackmit.org/",
+    "https://www.bing.com",
+    "https://www.yahoo.com",
+    "https://hackmit.org/",
+    "https://www.baidu.com",
+    "https://www.youtube.com",
+    "https://en.wikipedia.org/wiki/Caesar_cipher",
+    "https://en.wikipedia.org/wiki/Bacon%27s_cipher",
+    "https://hackmit.org/",
+    "https://en.wikipedia.org/wiki/RSA_(cryptosystem)",
+    "https://en.wikipedia.org/wiki/Morse_code",
+    "https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher",
+    "https://en.wikipedia.org/wiki/Chinese_character_strokes",
+    "https://www.youtube.com/watch?v=exzQkvv7g1w",
+    "https://en.wikipedia.org/wiki/Japanese_writing_system",
+    "https://simple.wikipedia.org/wiki/Chinese_characters",
+    "https://hackmit.org/",
+    "https://www.dictionary.com/",
+    "https://www.nytimes.com/games/wordle/index.html",
+    "https://www.nytimes.com/games/connections",
+    "https://www.nytimes.com/puzzles/sudoku",
+    "https://www.nytimes.com/games/strands",
+    "https://www.nytimes.com/crosswords/game/mini",
+    "https://www.nytimes.com/",
+    "https://www.nytimes.com/",
+    "https://www.nytimes.com/",
+  ];
 
   useEffect(() => {
     fetchNewWord();
@@ -135,6 +167,9 @@ export default function Home() {
                         data-animation="idle"
                         data-testid="tile"
                         aria-live="polite"
+                        onClick={() =>
+                          window.open(links[rowIndex * 5 + colIndex], "_blank")
+                        }
                       >
                         {char}
                       </div>

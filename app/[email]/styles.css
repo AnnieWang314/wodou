@@ -71,11 +71,20 @@
   -moz-user-select: none;
   user-select: none;
   height: 100%;
+  transition: background-color 0.3s, color 0.3s; /* Add transition for smooth effect */
 }
 .Tile-module_tile__UWEHN::before {
   content: "";
   display: inline-block;
   padding-bottom: 100%;
+}
+.Tile-module_tile__UWEHN:hover {
+  background-color: var(
+    --color-present
+  ) !important; /* Change background to yellow */
+  color: var(
+    --key-evaluated-text-color
+  ) !important; /* Ensure text color is correct */
 }
 .Tile-module_tile__UWEHN.Tile-module_small__dKW39 {
   font-size: 1.6rem;
