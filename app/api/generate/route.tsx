@@ -5,16 +5,17 @@ import { generate } from "random-words";
 import middleware from "../../middleware";
 
 export async function GET(req: NextRequest) {
-  const middlewareResponse = await middleware(req);
+  const { searchParams } = new URL(req.url);
+  const userEmail = searchParams.get("userEmail");
+
+  const middlewareResponse = await middleware(req, userEmail);
   if (middlewareResponse.status !== 200) {
-    return new Response(null, {
-      status: 429,
+    const errorMessage = await middlewareResponse.json();
+    return new Response(JSON.stringify(errorMessage), {
+      status: middlewareResponse.status,
       headers: { "Content-Type": "application/json" },
     });
   }
-
-  const { searchParams } = new URL(req.url);
-  const userEmail = searchParams.get("userEmail");
 
   if (!userEmail) {
     return new Response(null, {

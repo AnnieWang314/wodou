@@ -4,15 +4,17 @@ import { kv } from "@vercel/kv";
 import middleware from "../../middleware";
 
 export async function POST(req: NextRequest) {
-  const middlewareResponse = await middleware(req);
+  const { userEmail, encodedWord, userInput } = await req.json();
+
+  const middlewareResponse = await middleware(req, userEmail);
   if (middlewareResponse.status !== 200) {
-    return new Response(null, {
-      status: 429,
+    const errorMessage = await middlewareResponse.json();
+    return new Response(JSON.stringify(errorMessage), {
+      status: middlewareResponse.status,
       headers: { "Content-Type": "application/json" },
     });
   }
 
-  const { userEmail, encodedWord, userInput } = await req.json();
   const hashEmail = createHash("sha256").update(userEmail).digest("hex");
 
   const currentEncodedWord = await kv.hget(hashEmail, "currentEncodedWord");

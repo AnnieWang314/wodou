@@ -72,11 +72,9 @@ export default function Home() {
         setFeedback(Array(6).fill("tbd"));
         setSecretMessage(null);
         setErrorMessage(null);
-      } else if (response.status === 429) {
-        console.error("chill out");
-        setErrorMessage("Please wait a bit :D");
       } else {
-        console.error("Failed to fetch new word:", response.statusText);
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || "Failed to fetch new word");
       }
     } catch (error) {
       console.error("Error fetching new word:", error);
@@ -109,34 +107,38 @@ export default function Home() {
   }, [finalRowInput, hasSubmitted]);
 
   const handleSubmit = async () => {
-    const response = await fetch("/api/verify", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userEmail,
-        encodedWord,
-        userInput: finalRowInput,
-      }),
-    });
+    try {
+      const response = await fetch("/api/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userEmail,
+          encodedWord,
+          userInput: finalRowInput,
+        }),
+      });
 
-    if (response.status === 429) {
-      console.log("chill out");
-      setErrorMessage("Please wait a bit :D");
-    } else {
-      const result = await response.json();
-      if (result.feedback) {
-        setHasSubmitted(true);
-        setFeedback(result.feedback);
-        setErrorMessage(null);
-        if (result.secretMessage) {
-          setSecretMessage(result.secretMessage);
+      if (response.ok) {
+        const result = await response.json();
+        if (result.feedback) {
+          setHasSubmitted(true);
+          setFeedback(result.feedback);
+          setErrorMessage(null);
+          if (result.secretMessage) {
+            setSecretMessage(result.secretMessage);
+          }
+        } else {
+          console.log("nice try");
+          setErrorMessage(null);
         }
       } else {
-        console.log("nice try");
-        setErrorMessage(null);
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || "Failed to verify input");
       }
+    } catch (error) {
+      console.error("Error verifying word:", error);
     }
   };
 
