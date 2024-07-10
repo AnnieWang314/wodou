@@ -2,8 +2,17 @@ import type { NextRequest, NextResponse } from "next/server";
 import { createHash } from "crypto";
 import { kv } from "@vercel/kv";
 import { generate } from "random-words";
+import middleware from "../../middleware";
 
 export async function GET(req: NextRequest) {
+  const middlewareResponse = await middleware(req);
+  if (middlewareResponse.status !== 200) {
+    return new Response(null, {
+      status: 429,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   const { searchParams } = new URL(req.url);
   const userEmail = searchParams.get("userEmail");
 

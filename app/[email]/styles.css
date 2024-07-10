@@ -222,6 +222,7 @@
   flex-direction: column;
   justify-content: flex-start;
   padding: 30px;
+  padding-bottom: 10px;
   align-items: center;
   flex-grow: 1;
   overflow: hidden;

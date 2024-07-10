@@ -14,6 +14,7 @@ export default function Home() {
   const [feedback, setFeedback] = useState<string[]>(Array(6).fill("tbd"));
   const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
   const [secretMessage, setSecretMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const links = [
     "https://hackmit.org/",
     "https://hackmit.org/",
@@ -70,6 +71,10 @@ export default function Home() {
         setHasSubmitted(false);
         setFeedback(Array(6).fill("tbd"));
         setSecretMessage(null);
+        setErrorMessage(null);
+      } else if (response.status === 429) {
+        console.error("chill out");
+        setErrorMessage("Please wait a bit :D");
       } else {
         console.error("Failed to fetch new word:", response.statusText);
       }
@@ -115,11 +120,23 @@ export default function Home() {
         userInput: finalRowInput,
       }),
     });
-    const result = await response.json();
-    setHasSubmitted(true);
-    setFeedback(result.feedback);
-    if (result.secretMessage) {
-      setSecretMessage(result.secretMessage);
+
+    if (response.status === 429) {
+      console.log("chill out");
+      setErrorMessage("Please wait a bit :D");
+    } else {
+      const result = await response.json();
+      if (result.feedback) {
+        setHasSubmitted(true);
+        setFeedback(result.feedback);
+        setErrorMessage(null);
+        if (result.secretMessage) {
+          setSecretMessage(result.secretMessage);
+        }
+      } else {
+        console.log("nice try");
+        setErrorMessage(null);
+      }
     }
   };
 
@@ -231,6 +248,7 @@ export default function Home() {
             )}
           </div>
         )}
+        {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
       </main>
     </div>
   );
