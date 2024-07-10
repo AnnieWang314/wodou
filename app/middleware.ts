@@ -3,9 +3,14 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { createHash } from "crypto";
 import { kv } from "@vercel/kv";
 
-const ratelimit = new Ratelimit({
+const shortTermRatelimit = new Ratelimit({
   redis: kv,
   limiter: Ratelimit.slidingWindow(4, "60 s"),
+});
+
+const longTermRatelimit = new Ratelimit({
+  redis: kv,
+  limiter: Ratelimit.slidingWindow(1000, "24 h"),
 });
 
 // Define which routes you want to rate limit
@@ -42,13 +47,15 @@ export default async function middleware(
     });
   }
 
-  const { success, pending, limit, reset, remaining } = await ratelimit.limit(
-    userEmail
-  );
-  return success
-    ? NextResponse.next()
-    : new NextResponse(JSON.stringify({ message: "Wait a bit :D" }), {
-        status: 429,
-        headers: { "Content-Type": "application/json" },
-      });
+  const shortTermResult = await shortTermRatelimit.limit(userEmail);
+  const longTermResult = await longTermRatelimit.limit(userEmail);
+
+  if (!shortTermResult.success || !longTermResult.success) {
+    return new NextResponse(JSON.stringify({ message: "Wait a bit :D" }), {
+      status: 429,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  return NextResponse.next();
 }
