@@ -5,12 +5,12 @@ import { kv } from "@vercel/kv";
 
 const shortTermRatelimit = new Ratelimit({
   redis: kv,
-  limiter: Ratelimit.slidingWindow(4, "60 s"),
+  limiter: Ratelimit.slidingWindow(3, "60 s"),
 });
 
 const longTermRatelimit = new Ratelimit({
   redis: kv,
-  limiter: Ratelimit.slidingWindow(1000, "24 h"),
+  limiter: Ratelimit.slidingWindow(800, "24 h"),
 });
 
 // Define which routes you want to rate limit
