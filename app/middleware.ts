@@ -5,7 +5,7 @@ import { kv } from "@vercel/kv";
 
 const shortTermRatelimit = new Ratelimit({
   redis: kv,
-  limiter: Ratelimit.slidingWindow(3, "60 s"),
+  limiter: Ratelimit.slidingWindow(6, "60 s"),
 });
 
 const longTermRatelimit = new Ratelimit({
