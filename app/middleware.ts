@@ -22,6 +22,10 @@ export default async function middleware(
   request: NextRequest,
   userEmail: string | null
 ) {
+  if (userEmail === "guest") {
+    return NextResponse.next();
+  }
+
   if (
     !userEmail ||
     !userEmail.includes("_") ||
