@@ -1,6 +1,6 @@
 ## Wodou
 
-HackMIT 2024 Puzzle by Annie Wang
+HackMIT 2024 Organizer Puzzle by Annie Wang
 
 To run the development server:
 
